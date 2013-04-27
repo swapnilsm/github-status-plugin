@@ -1,0 +1,7 @@
+# Build stuff.
+/Gemfile.lock
+
+# Emacs stuff
+*~
+/#*#
+.#*
