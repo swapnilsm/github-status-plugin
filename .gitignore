@@ -1,5 +1,6 @@
 # Build stuff.
 /Gemfile.lock
+/work
 
 # Emacs stuff
 *~
