@@ -48,6 +48,25 @@ class GithubApi
     end
   end
 
+  ##
+  # Returns True if the instance's credentials are valid for the configured
+  # repo.
+  def test_credentials
+    begin
+      url = repo_url
+      RestClient.get(url.to_s, :accept => :json)
+      return true
+    rescue RestClient::Exception => e
+      # TODO: Figure out a reasonable way to log the failure. (thomasvandoren,
+      #       2013-04-28)
+      return false
+    rescue => e
+      # TODO: Figure out a reasonable way to log the failure. (thomasvandoren,
+      #       2013-04-28)
+      return false
+    end
+  end
+
   private
 
   ##
