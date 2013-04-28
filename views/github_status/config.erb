@@ -1,0 +1,43 @@
+<%
+  f = taglib("/lib/form")
+  f.block do
+%>
+    <table style="margin-left: 30px;">
+      <%
+        f.entry :title       => 'GitHub Repo',
+                :field       => :github_repo,
+                :description => 'GitHub repo to report status (ie thomasvandoren/github-status-plugin).' do
+          f.textbox :clazz => 'required'
+        end
+
+        f.entry :title       => 'GitHub Username',
+                :field       => :github_username,
+                :description => 'GitHub user to authenticate requests.' do
+          f.textbox :clazz => 'required'
+        end
+
+        f.entry :title       => 'GitHub Password',
+                :field       => :github_password,
+                :description => 'GitHub password for given user.' do
+          f.password :clazz => 'required'
+        end
+
+        f.entry :title       => 'GitHub API',
+                :field       => :github_api,
+                :description => 'API to access GitHub.' do
+          f.textbox :clazz => 'required', :default => 'https://api.github.com'
+        end
+
+      %>
+
+<%#
+TODO: Implement validation to verify credentials. (thomasvandoren, 2013-04-27)
+      f.validateButton :title    => 'Test Connection',
+                       :progress => 'Conecting...',
+                       :method   => 'test_connection',
+                       :with     => :github_repo,:github_username,:github_password,:github_api
+#%>
+    </table>
+<%
+  end
+%>
