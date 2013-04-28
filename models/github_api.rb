@@ -25,6 +25,7 @@ class GithubApi
   # @param [String] the commit SHA1 that was built
   # @param [String] the URL for the build
   # @param [String] description of status
+  # @param [Jenkins::Model::Listener] listener the listener for this build.
   def record_status(github_state, commit_sha, build_url, description, listener)
     begin
       url = statuses_url(commit_sha)
@@ -51,18 +52,18 @@ class GithubApi
   ##
   # Returns True if the instance's credentials are valid for the configured
   # repo.
-  def test_credentials
+  #
+  # @param [Jenkins::Model::Listener] listener the listener for this build.
+  def test_credentials(listener)
     begin
       url = repo_url
       RestClient.get(url.to_s, :accept => :json)
       return true
     rescue RestClient::Exception => e
-      # TODO: Figure out a reasonable way to log the failure. (thomasvandoren,
-      #       2013-04-28)
+      listener.error("Failed to connect to GitHub: #{e.response} #{e}")
       return false
     rescue => e
-      # TODO: Figure out a reasonable way to log the failure. (thomasvandoren,
-      #       2013-04-28)
+      listener.error("Failed to connect to GitHub: #{e}")
       return false
     end
   end

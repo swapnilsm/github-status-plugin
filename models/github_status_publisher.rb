@@ -33,6 +33,11 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
   # @param [Jenkins::Launcher] launcher the launcher that can run code on the node running this build
   # @param [Jenkins::Model::Listener] listener the listener for this build.
   def perform(build, launcher, listener)
+    # Exit early if validation fails.
+    if not validate(listener)
+      return nil
+    end
+
     commit_sha = sha1(build, launcher, listener)
     build_url = build.native.get_absolute_url
     build_name = build.native.full_display_name
@@ -68,6 +73,9 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
   # Execute a command in the workspace using the launcher.
   #
   # @param [String] command to execute
+  # @param [Jenkins::Model::Build] build on which to run this step
+  # @param [Jenkins::Launcher] launcher the launcher that can run code on the node running this build
+  # @param [Jenkins::Model::Listener] listener the listener for this build.
   def run(command, build, launcher, listener)
     listener.debug("Executing command #{command} in workspace.")
 
@@ -102,6 +110,10 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
   #
   # But, as of 2013-04-27, I can't figure out how to import the BuildData class
   # from the git plugin.
+  #
+  # @param [Jenkins::Model::Build] build on which to run this step
+  # @param [Jenkins::Launcher] launcher the launcher that can run code on the node running this build
+  # @param [Jenkins::Model::Listener] listener the listener for this build.
   def sha1(build, launcher, listener)
     result = run("git rev-parse HEAD", build, launcher, listener)
     if result[:exit_code] == 0
@@ -112,6 +124,15 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
       listener.error("Failed to retrieve commit SHA1: stdout: #{result[:out]} stderr: #{result[:err]}")
       return nil
     end
+  end
+
+  ##
+  # Validates that instance credentials are valid. Returns true if so. Logs an
+  # error and returns false if not.
+  #
+  # @param [Jenkins::Model::Listener] listener the listener for this build.
+  def validate(listener)
+    return gh_api.test_credentials(listener)
   end
 
 end
