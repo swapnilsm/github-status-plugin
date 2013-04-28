@@ -65,26 +65,6 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
   end
 
   ##
-  # Total hackery to retrieve the commit SHA1. Ideally, it would be something
-  # like:
-  #
-  #   build.native.get_action(BuildData.class).get_last_built_revision.get_sha1
-  #
-  # But, as of 2013-04-27, I can't figure out how to import the BuildData class
-  # from the git plugin.
-  def sha1(build, launcher, listener)
-    result = run("git rev-parse HEAD", build, launcher, listener)
-    if result[:exit_code] == 0
-      sha1 = result[:out].strip
-      listener.debug("Current commit SHA1: #{sha1}")
-      return sha1
-    else
-      listener.error("Failed to retrieve commit SHA1: stdout: #{result[:out]} stderr: #{result[:err]}")
-      return nil
-    end
-  end
-
-  ##
   # Execute a command in the workspace using the launcher.
   #
   # @param [String] command to execute
@@ -112,6 +92,26 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
       :out       => opts[:out].read,
       :err       => opts[:err].read
     }
+  end
+
+  ##
+  # Total hackery to retrieve the commit SHA1. Ideally, it would be something
+  # like:
+  #
+  #   build.native.get_action(BuildData.class).get_last_built_revision.get_sha1
+  #
+  # But, as of 2013-04-27, I can't figure out how to import the BuildData class
+  # from the git plugin.
+  def sha1(build, launcher, listener)
+    result = run("git rev-parse HEAD", build, launcher, listener)
+    if result[:exit_code] == 0
+      sha1 = result[:out].strip
+      listener.debug("Current commit SHA1: #{sha1}")
+      return sha1
+    else
+      listener.error("Failed to retrieve commit SHA1: stdout: #{result[:out]} stderr: #{result[:err]}")
+      return nil
+    end
   end
 
 end
