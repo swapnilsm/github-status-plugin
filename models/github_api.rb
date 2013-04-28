@@ -7,10 +7,15 @@ class GitHubApi
   ##
   # Create a new GitHubApi instance for interacting with GitHub.
   #
-  # @param [GitHubStatus] instance of GitHub status with instance attributes
-  # set.
-  def initialize(github_status)
-    @github_status = github_status
+  # @param [String] github repo of the form <owner>/<repo_name>
+  # @param [String] github API location, ie https://api.github.com
+  # @param [String] github username for authenticating requests
+  # @param [String] github password for authenticating requests
+  def initialize(github_repo, github_api_url, github_username, github_password)
+    @github_repo = github_repo
+    @github_api_url = github_api_url
+    @github_username = github_username
+    @github_password = github_password
   end
 
   ##
@@ -21,13 +26,23 @@ class GitHubApi
   # @param [String] the URL for the build
   # @param [String] description of status
   def record_status(github_state, commit_sha, build_url, description, listener)
-    url = statuses_url(commit_sha).to_s
     begin
-      response = RestClient.post(url,
-                                 json_body(github_state, build_url, description).to_json,
+      url = statuses_url(commit_sha)
+
+      # Remove password for logging.
+      log_url = url.clone
+      log_url.password = nil
+
+      body = json_body(github_state, build_url, description)
+
+      listener.debug("Making GitHub request to #{log_url.to_s} with body: #{body}")
+      response = RestClient.post(url.to_s,
+                                 body,
                                  :content_type => :json,
                                  :acceptn => :json)
-      listener.info("Published status #{gihtub_state} to GitHub repo: #{github_status.github_repo}")
+      listener.info("Published status #{github_state} to GitHub repo: #{@github_repo}")
+    rescue RestClient::Exception => e
+      listener.error("Failed to POST status to GitHub: #{e.response} #{e}")
     rescue => e
       listener.error("Failed to POST status to GitHub: #{e}")
     end
@@ -35,22 +50,27 @@ class GitHubApi
 
   private
 
+  ##
+  # Returns serialized JSON request body.
+  #
+  # @param [String] github state - one of pending, failure, success
+  # @param [String] build url
+  # @param [String] description to add to the status on github
+  def json_body(github_state, build_url, description)
+    return {
+      :state => github_state,
+      :target_url => build_url,
+      :description => description
+    }.to_json
+  end
+
   # Returns URL for GitHub repo. URL is an instance of URI.
   def repo_url
-    api = @github_status.github_api
-    user = @github_status.github_username
-    pass = @github_status.github_password
-    repo = @github_status.github_repo
-
-    begin
-      url = URI(api)
-      url.user = user
-      url.password = pass
-      url.path = "/repos/#{repo}"
-      return url
-    rescue => e
-      return nil
-    end
+    url = URI(@github_api_url)
+    url.user = @github_username
+    url.password = @github_password
+    url.path = "/repos/#{@github_repo}"
+    return url
    end
 
   ##
@@ -58,13 +78,9 @@ class GitHubApi
   #
   # @param [String] the commit SHA1 that was built
   def statuses_url(commit_sha)
-    begin
-      url = repo_url
-      url.path = "#{url.path}/statuses/#{commit_sha}"
-      return url
-    rescue => e
-      return nil
-    end
+    url = repo_url
+    url.path = "#{url.path}/statuses/#{commit_sha}"
+    return url
   end
 
 end

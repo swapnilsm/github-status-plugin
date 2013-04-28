@@ -23,7 +23,7 @@
         end
 
         f.entry :title       => 'GitHub API',
-                :field       => :github_api,
+                :field       => :github_api_url,
                 :description => 'API to access GitHub.' do
           f.textbox :clazz => 'required', :default => 'https://api.github.com'
         end
@@ -35,7 +35,7 @@ TODO: Implement validation to verify credentials. (thomasvandoren, 2013-04-27)
       f.validateButton :title    => 'Test Connection',
                        :progress => 'Conecting...',
                        :method   => 'test_connection',
-                       :with     => :github_repo,:github_username,:github_password,:github_api
+                       :with     => :github_repo,:github_username,:github_password,:github_api_url
 #%>
     </table>
 <%
