@@ -2,10 +2,10 @@ require 'json'
 require 'rest-client'
 require 'uri'
 
-class GitHubApi
+class GithubApi
 
   ##
-  # Create a new GitHubApi instance for interacting with GitHub.
+  # Create a new GithubApi instance for interacting with GitHub.
   #
   # @param [String] github repo of the form <owner>/<repo_name>
   # @param [String] github API location, ie https://api.github.com

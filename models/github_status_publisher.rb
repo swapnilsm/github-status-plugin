@@ -1,7 +1,7 @@
 require 'stringio'
 require_relative 'github_api'
 
-class GithubStatus < Jenkins::Tasks::Publisher
+class GithubStatusPublisher < Jenkins::Tasks::Publisher
 
   attr_reader :github_repo,
               :github_api_url,
@@ -68,9 +68,9 @@ class GithubStatus < Jenkins::Tasks::Publisher
     end
   end
 
-  # Returns a new instance of GitHubApi from instance attributes.
+  # Returns a new instance of GithubApi from instance attributes.
   def gh_api
-    return GitHubApi.new(@github_repo,
+    return GithubApi.new(@github_repo,
                          @github_api_url,
                          @github_username,
                          @github_password)
