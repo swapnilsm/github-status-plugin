@@ -32,13 +32,17 @@
 
       %>
 
-<%#
-TODO: Implement validation to verify credentials. (thomasvandoren, 2013-04-27)
-      f.validateButton :title    => 'Test Connection',
-                       :progress => 'Conecting...',
-                       :method   => 'test_connection',
-                       :with     => :github_repo,:github_username,:github_password,:github_api_url
-#%>
+      <%# Disabled: I'm not sure how to create a function that
+        # returns the FormValidation responses or which descriptor it would go
+        # on. (thomasvandoren, 2013-04-28)
+
+        f.validateButton :title    => 'Test Connection',
+                         :progress => 'Conecting...',
+                         :method   => 'test_connection',
+                         :with     => "github_repo,github_username,github_password,github_api_url"
+
+      %>
+
     </table>
 <%
   end

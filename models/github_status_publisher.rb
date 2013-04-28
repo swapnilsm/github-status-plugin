@@ -42,18 +42,6 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
     gh_api.record_status(gh_state, commit_sha, build_url, description, listener)
   end
 
-  ##
-  # Verifies the user/pass can access the given repo.
-  #
-  # @param [String] FIXME
-  # @param [String] FIXME
-  # @param [String] FIXME
-  # @param [String] FIXME
-  def test_connection(github_repo, github_username, github_password, github_api_url)
-    # FIXME!
-    return true
-  end
-
   private
 
   ##
