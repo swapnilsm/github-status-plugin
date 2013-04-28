@@ -39,7 +39,7 @@ class GithubApi
       response = RestClient.post(url.to_s,
                                  body,
                                  :content_type => :json,
-                                 :acceptn => :json)
+                                 :accept => :json)
       listener.info("Published status #{github_state} to GitHub repo: #{@github_repo}")
     rescue RestClient::Exception => e
       listener.error("Failed to POST status to GitHub: #{e.response} #{e}")
