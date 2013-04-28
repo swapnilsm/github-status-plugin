@@ -2,8 +2,10 @@
   f = taglib("/lib/form")
   f.block do
 %>
-    <table style="margin-left: 30px;">
+    <table>
+
       <%
+
         f.entry :title       => 'GitHub Repo',
                 :field       => :github_repo,
                 :description => 'GitHub repo to report status (ie thomasvandoren/github-status-plugin).' do
