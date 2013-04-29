@@ -1,5 +1,7 @@
 require 'stringio'
-require_relative 'github_api'
+
+# require_relative would be better, but might as well support ruby 1.8.
+require File.expand_path('../github_api', __FILE__)
 
 class GithubStatusPublisher < Jenkins::Tasks::Publisher
 
