@@ -1,4 +1,9 @@
 # jpi tasks
+#
+# As of 2013-04-28, the :server task will not work. This patch fixes the issue:
+#
+#   https://github.com/jenkinsci/jenkins.rb/pull/76
+#
 require 'jenkins/rake'
 Jenkins::Rake.new.install
 
