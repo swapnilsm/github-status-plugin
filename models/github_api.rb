@@ -89,7 +89,7 @@ class GithubApi
     url = URI(@github_api_url)
     url.user = @github_username
     url.password = @github_password
-    url.path = "/repos/#{@github_repo}"
+    url.path = "#{url.path}/repos/#{@github_repo}"
     return url
    end
 
