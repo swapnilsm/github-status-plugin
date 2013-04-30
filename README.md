@@ -31,7 +31,7 @@ Configure
 
 With the plugin installed, select "Publish Jenkins job status to GitHub" from the publish menu in the project configuration.
 
-![Publish Menu](doc/publish-menu.png)
+![Publish Menu](doc/publisher-menu.png)
 
 Enter the GitHub repo in the form owner/repo_name that the project uses. Enter a username/password that has permissions to comment on commits. The default API URL is correct for GitHub. A different value will be required for GitHub Enterprise.
 
