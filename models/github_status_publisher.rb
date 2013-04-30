@@ -10,7 +10,7 @@ class GithubStatusPublisher < Jenkins::Tasks::Publisher
               :github_username,
               :github_password
 
-  display_name "Publish Jenkins job status to GitHub status API"
+  display_name "Publish Jenkins job status to GitHub"
 
   # Invoked with the form parameters when this extension point
   # is created from a configuration screen.
